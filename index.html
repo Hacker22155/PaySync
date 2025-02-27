@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK Product Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            background: #ff5733;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #c70039;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>DK Product Payment</h1>
+        <form id="orderForm">
+            <input type="text" id="name" placeholder="আপনার নাম" required>
+            <input type="tel" id="phone" placeholder="ফোন নম্বর" required>
+            <input type="text" id="address" placeholder="ঠিকানা (গ্রাম, থানা, জেলা, পোস্ট অফিস)" required>
+            <input type="text" id="product" placeholder="প্রোডাক্টের নাম" required>
+            <input type="number" id="price" placeholder="প্রোডাক্টের দাম (৳)" required>
+            <button type="button" onclick="sendToTelegram()">অর্ডার করুন</button>
+        </form>
+    </div>
+
+    <script>
+        function sendToTelegram() {
+            const TELEGRAM_BOT_TOKEN = "7590766158:AAFTMfMpGQkg_4iw3UyOiGX4NdarPIvcwRE";
+            const TELEGRAM_CHAT_ID = "6807445600";
+
+            let name = document.getElementById("name").value;
+            let phone = document.getElementById("phone").value;
+            let address = document.getElementById("address").value;
+            let product = document.getElementById("product").value;
+            let price = document.getElementById("price").value;
+
+            if (!name || !phone || !address || !product || !price) {
+                alert("সব তথ্য পূরণ করুন!");
+                return;
+            }
+
+            let message = `📦 *New Order Received* \n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🏠 *Address:* ${address}\n🛍 *Product:* ${product}\n💰 *Price:* ৳${price}`;
+            
+            let url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+            fetch(url)
+                .then(response => {
+                    if (response.ok) {
+                        alert("✅ অর্ডার সফলভাবে পাঠানো হয়েছে!");
+                        window.location.href = "payment.html";  // পেমেন্ট পেজে পাঠানো হবে
+                    } else {
+                        alert("❌ অর্ডার পাঠাতে সমস্যা হয়েছে!");
+                    }
+                })
+                .catch(error => {
+                    alert("❌ নেটওয়ার্ক সমস্যার কারণে অর্ডার পাঠানো যায়নি!");
+                });
+        }
+    </script>
+
+</body>
+</html>
